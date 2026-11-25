@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Data Analyzer | Quantitative Terminal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        accentBlue: '#38bdf8',
+                        bullGreen: '#10b981',
+                        bearRed: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen flex flex-col custom-scrollbar">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-cardBg border-b border-slate-700/80 sticky top-0 z-50 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-cyan-500 to-blue-600 p-2 rounded-lg text-white shadow-lg shadow-cyan-500/20">
+                <i data-lucide="trending-up" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
+                    QUANT ANALYZER <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-cyan-400 border border-cyan-500/30">PRO EDITION</span>
+                </h1>
+                <p class="text-xs text-slate-400">Institutional Time-Series Analytics & Backtesting Engine</p>
+            </div>
+        </div>
+
+        <!-- Search & Control Controls -->
+        <div class="flex items-center gap-3 flex-wrap">
+            <div class="relative flex items-center">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3"></i>
+                <input id="tickerInput" type="text" value="AAPL" uppercase placeholder="Ticker (e.g. AAPL, NVDA, TSLA)"
+                    class="bg-slate-900/90 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-sm font-semibold tracking-wider text-white focus:outline-none focus:border-cyan-400 uppercase w-36">
+            </div>
+
+            <!-- Timeframe selector -->
+            <div class="flex bg-slate-900/80 border border-slate-700 rounded-lg p-0.5 text-xs font-medium">
+                <button onclick="changePeriod('3mo')" class="period-btn px-2.5 py-1 rounded hover:text-white text-slate-400" data-p="3mo">3M</button>
+                <button onclick="changePeriod('6mo')" class="period-btn px-2.5 py-1 rounded hover:text-white text-slate-400" data-p="6mo">6M</button>
+                <button onclick="changePeriod('1y')" class="period-btn px-2.5 py-1 rounded text-white bg-blue-600 font-semibold" data-p="1y">1Y</button>
+                <button onclick="changePeriod('2y')" class="period-btn px-2.5 py-1 rounded hover:text-white text-slate-400" data-p="2y">2Y</button>
+                <button onclick="changePeriod('5y')" class="period-btn px-2.5 py-1 rounded hover:text-white text-slate-400" data-p="5y">5Y</button>
+            </div>
+
+            <button onclick="loadStockData()" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold px-4 py-1.5 rounded-lg text-sm flex items-center gap-1.5 transition-all shadow-md shadow-cyan-500/20">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Analyze
+            </button>
+
+            <a href="/docs" target="_blank" class="text-xs text-slate-300 hover:text-white bg-slate-800 border border-slate-700 px-3 py-2 rounded-lg flex items-center gap-1">
+                <i data-lucide="code" class="w-3.5 h-3.5"></i> API Docs
+            </a>
+        </div>
+    </header>
+
+    <!-- Watchlist Ribbon -->
+    <div class="bg-slate-900/70 border-b border-slate-800 px-6 py-2 overflow-x-auto flex items-center gap-4 text-xs">
+        <span class="text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1">
+            <i data-lucide="eye" class="w-3.5 h-3.5 text-cyan-400"></i> Watchlist:
+        </span>
+        <div id="watchlistContainer" class="flex items-center gap-3">
+            <span class="text-slate-400">Loading live watchlist...</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="p-6 max-w-7xl mx-auto w-full flex-1 flex flex-col gap-6">
+
+        <!-- Metrics Overview Grid -->
+        <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <!-- Price Card -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-4 shadow-sm">
+                <div class="text-xs text-slate-400 uppercase font-medium">Last Close</div>
+                <div class="text-2xl font-bold mt-1 text-white" id="statPrice">$---</div>
+                <div class="text-xs mt-1 font-semibold flex items-center gap-1" id="statPriceChange">---</div>
+            </div>
+
+            <!-- Trend Bias -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-4 shadow-sm">
+                <div class="text-xs text-slate-400 uppercase font-medium">Technical Bias</div>
+                <div class="text-lg font-bold mt-1 text-cyan-400" id="statTrend">---</div>
+                <div class="text-xs text-slate-400 mt-1" id="statConsensus">Consensus Score</div>
+            </div>
+
+            <!-- 52W Range -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-4 shadow-sm">
+                <div class="text-xs text-slate-400 uppercase font-medium">52W High / Low</div>
+                <div class="text-sm font-semibold mt-1 text-slate-200" id="stat52wRange">$--- / $---</div>
+                <div class="text-xs text-slate-400 mt-1" id="stat52wDistance">Dist: ---%</div>
+            </div>
+
+            <!-- Sharpe Ratio -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-4 shadow-sm">
+                <div class="text-xs text-slate-400 uppercase font-medium">Sharpe (Rf=4%)</div>
+                <div class="text-2xl font-bold mt-1 text-emerald-400" id="statSharpe">---</div>
+                <div class="text-xs text-slate-400 mt-1" id="statSortino">Sortino: ---</div>
+            </div>
+
+            <!-- Volatility -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-4 shadow-sm">
+                <div class="text-xs text-slate-400 uppercase font-medium">Annual Volatility</div>
+                <div class="text-2xl font-bold mt-1 text-amber-400" id="statVolatility">---%</div>
+                <div class="text-xs text-slate-400 mt-1" id="statRiskRating">Rating: ---</div>
+            </div>
+
+            <!-- Max Drawdown & VaR -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-4 shadow-sm">
+                <div class="text-xs text-slate-400 uppercase font-medium">Max Drawdown</div>
+                <div class="text-2xl font-bold mt-1 text-red-400" id="statMaxDD">---%</div>
+                <div class="text-xs text-slate-400 mt-1" id="statVaR">95% VaR: ---%</div>
+            </div>
+        </section>
+
+        <!-- Main Chart Section: Price & Technical MAs -->
+        <section class="bg-cardBg border border-slate-700/70 rounded-xl p-5 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="line-chart" class="w-5 h-5 text-cyan-400"></i>
+                    <h2 class="text-base font-bold text-white tracking-wide" id="mainChartTitle">Price Action & Moving Averages</h2>
+                </div>
+                <!-- Indicator Visibility Toggles -->
+                <div class="flex items-center gap-3 text-xs">
+                    <label class="flex items-center gap-1.5 cursor-pointer text-slate-300">
+                        <input type="checkbox" id="toggleSMA20" checked onchange="toggleDataset(1)" class="accent-orange-500"> SMA 20
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer text-slate-300">
+                        <input type="checkbox" id="toggleSMA50" checked onchange="toggleDataset(2)" class="accent-emerald-500"> SMA 50
+                    </label>
+                    <label class="flex items-center gap-1.5 cursor-pointer text-slate-300">
+                        <input type="checkbox" id="toggleSMA200" checked onchange="toggleDataset(3)" class="accent-rose-500"> SMA 200
+                    </label>
+                    <button onclick="downloadCSV()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-1 rounded text-xs flex items-center gap-1 text-slate-200">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+            <!-- Canvas -->
+            <div class="h-80 w-full">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Oscillators Sub-Charts: RSI & MACD -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- RSI Oscillator -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-5 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="gauge" class="w-4 h-4 text-purple-400"></i>
+                        <h3 class="text-sm font-bold text-white">Relative Strength Index (RSI 14)</h3>
+                    </div>
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30" id="currentRsiBadge">RSI: --</span>
+                </div>
+                <div class="h-44 w-full">
+                    <canvas id="rsiChart"></canvas>
+                </div>
+            </div>
+
+            <!-- MACD Oscillator -->
+            <div class="bg-cardBg border border-slate-700/70 rounded-xl p-5 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-cyan-400"></i>
+                        <h3 class="text-sm font-bold text-white">MACD (12, 26, 9) Momentum</h3>
+                    </div>
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30" id="currentMacdBadge">MACD: --</span>
+                </div>
+                <div class="h-44 w-full">
+                    <canvas id="macdChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Algorithmic Strategy Backtesting Lab -->
+        <section class="bg-cardBg border border-slate-700/70 rounded-xl p-5 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4 border-b border-slate-700/70 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="cpu" class="w-5 h-5 text-emerald-400"></i>
+                    <div>
+                        <h2 class="text-base font-bold text-white">Quantitative Strategy Backtester</h2>
+                        <p class="text-xs text-slate-400">Vectorized backtesting engine simulating capital growth against Buy & Hold benchmark</p>
+                    </div>
+                </div>
+
+                <!-- Parameters -->
+                <div class="flex items-center gap-3 flex-wrap">
+                    <select id="stratSelect" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+                        <option value="ma_cross">Dual MA Crossover (Golden Cross)</option>
+                        <option value="rsi">RSI Mean Reversion (30/70)</option>
+                    </select>
+                    <input id="fastPeriodInput" type="number" value="20" title="Fast SMA Period" class="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white">
+                    <input id="slowPeriodInput" type="number" value="50" title="Slow SMA Period" class="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white">
+                    <button onclick="runBacktest()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all">
+                        <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Run Backtest
+                    </button>
+                </div>
+            </div>
+
+            <!-- Backtest KPI & Equity Chart -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- KPI Sidebar -->
+                <div class="flex flex-col gap-3 justify-between">
+                    <div class="bg-slate-900/80 border border-slate-700 rounded-lg p-3">
+                        <div class="text-xs text-slate-400">Strategy Return</div>
+                        <div class="text-xl font-bold text-emerald-400" id="btStratReturn">--%</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Benchmark: <span id="btBenchReturn">--%</span></div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 rounded-lg p-3">
+                        <div class="text-xs text-slate-400">Alpha Outperformance</div>
+                        <div class="text-xl font-bold text-cyan-400" id="btAlpha">--%</div>
+                        <div class="text-xs text-slate-400 mt-0.5">CAGR: <span id="btCagr">--%</span></div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 rounded-lg p-3">
+                        <div class="text-xs text-slate-400">Win Rate / Trades</div>
+                        <div class="text-xl font-bold text-purple-400" id="btWinRate">--%</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Total Trades: <span id="btTrades">--</span></div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700 rounded-lg p-3">
+                        <div class="text-xs text-slate-400">Strategy Max Drawdown</div>
+                        <div class="text-xl font-bold text-rose-400" id="btMaxDD">--%</div>
+                    </div>
+                </div>
+
+                <!-- Equity Curve Chart -->
+                <div class="lg:col-span-3 h-72">
+                    <canvas id="equityChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-cardBg border-t border-slate-800 py-4 px-6 text-center text-xs text-slate-400">
+        <p><strong>Stock Market Data Analyzer</strong> &bull; Proof of Work Academic Project &bull; Built with Python, FastAPI, and Chart.js</p>
+        <p class="mt-1 text-slate-400">⚠️ Disclaimer: Educational and research purposes only. Not financial or investment advice.</p>
+    </footer>
+
+    <!-- Frontend Interactive Logic -->
+    <script>
+        let currentPeriod = '1y';
+        let priceChart = null;
+        let rsiChart = null;
+        let macdChart = null;
+        let equityChart = null;
+
+        // Initialize icons
+        lucide.createIcons();
+
+        // On Load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadWatchlist();
+            loadStockData();
+        });
+
+        function changePeriod(p) {
+            currentPeriod = p;
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                if (btn.getAttribute('data-p') === p) {
+                    btn.classList.add('text-white', 'bg-blue-600', 'font-semibold');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    btn.classList.remove('text-white', 'bg-blue-600', 'font-semibold');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+            loadStockData();
+        }
+
+        async function loadWatchlist() {
+            try {
+                const res = await fetch('/api/v1/watchlist');
+                const data = await res.json();
+                const container = document.getElementById('watchlistContainer');
+                container.innerHTML = '';
+
+                data.watchlist.forEach(item => {
+                    const isPos = item.change_pct >= 0;
+                    const pill = document.createElement('button');
+                    pill.className = `px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center gap-1.5 transition-all text-xs`;
+                    pill.onclick = () => {
+                        document.getElementById('tickerInput').value = item.ticker;
+                        loadStockData();
+                    };
+                    pill.innerHTML = `
+                        <span class="font-bold text-white">${item.ticker}</span>
+                        <span class="text-slate-300">$${item.price}</span>
+                        <span class="${isPos ? 'text-emerald-400' : 'text-rose-400'} font-semibold">${isPos ? '+' : ''}${item.change_pct}%</span>
+                    `;
+                    container.appendChild(pill);
+                });
+            } catch (err) {
+                console.error("Error loading watchlist:", err);
+            }
+        }
+
+        async function loadStockData() {
+            const ticker = document.getElementById('tickerInput').value.trim().toUpperCase() || 'AAPL';
+            document.getElementById('mainChartTitle').innerText = `${ticker} - Price Action & Moving Averages (${currentPeriod.toUpperCase()})`;
+
+            try {
+                const res = await fetch(`/api/v1/stock/${ticker}?period=${currentPeriod}&include_indicators=true`);
+                if (!res.ok) throw new Error("Data fetch error");
+                const payload = await res.json();
+
+                renderMetrics(payload);
+                renderPriceChart(payload.historical);
+                renderRsiChart(payload.historical);
+                renderMacdChart(payload.historical);
+                
+                // Auto run initial backtest
+                runBacktest();
+            } catch (err) {
+                console.error("Failed to load stock data:", err);
+            }
+        }
+
+        function renderMetrics(payload) {
+            const m = payload.risk_metrics;
+            const l = payload.latest;
+
+            document.getElementById('statPrice').innerText = `$${m.current_price}`;
+            const totalRet = m.total_return_pct;
+            const isPos = totalRet >= 0;
+            document.getElementById('statPriceChange').innerHTML = `
+                <span class="${isPos ? 'text-emerald-400' : 'text-rose-400'}">${isPos ? '▲ +' : '▼ '}${totalRet}% Period Return</span>
+            `;
+
+            document.getElementById('statTrend').innerText = l.Overall_Trend || 'Neutral';
+            document.getElementById('statConsensus').innerText = `Score: ${l.Consensus_Score || 0} / 3`;
+
+            document.getElementById('stat52wRange').innerText = `$${m.highest_price} / $${m.lowest_price}`;
+            document.getElementById('stat52wDistance').innerText = `High: ${m.distance_from_52w_high_pct}% | Low: +${m.distance_from_52w_low_pct}%`;
+
+            document.getElementById('statSharpe').innerText = m.sharpe_ratio;
+            document.getElementById('statSortino').innerText = `Sortino: ${m.sortino_ratio}`;
+
+            document.getElementById('statVolatility').innerText = `${m.annualized_volatility_pct}%`;
+            document.getElementById('statRiskRating').innerText = `Rating: ${m.risk_rating}`;
+
+            document.getElementById('statMaxDD').innerText = `${m.max_drawdown_pct}%`;
+            document.getElementById('statVaR').innerText = `95% VaR: ${m.var_95_daily_pct}%`;
+
+            document.getElementById('currentRsiBadge').innerText = `RSI: ${l.RSI_14 || '--'}`;
+            document.getElementById('currentMacdBadge').innerText = `MACD: ${l.MACD || '--'}`;
+        }
+
+        function renderPriceChart(historical) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            const dates = historical.map(h => h.date);
+            const prices = historical.map(h => h.close);
+            const sma20 = historical.map(h => h.sma_20);
+            const sma50 = historical.map(h => h.sma_50);
+            const sma200 = historical.map(h => h.sma_200);
+
+            if (priceChart) priceChart.destroy();
+
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        { label: 'Close Price', data: prices, borderColor: '#38bdf8', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+                        { label: 'SMA 20', data: sma20, borderColor: '#f97316', borderWidth: 1.5, borderDash: [4, 4], pointRadius: 0 },
+                        { label: 'SMA 50', data: sma50, borderColor: '#10b981', borderWidth: 1.5, borderDash: [2, 2], pointRadius: 0 },
+                        { label: 'SMA 200', data: sma200, borderColor: '#ef4444', borderWidth: 1.8, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', maxTicksLimit: 10 } },
+                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+
+        function toggleDataset(index) {
+            if (priceChart && priceChart.data.datasets[index]) {
+                const meta = priceChart.getDatasetMeta(index);
+                meta.hidden = meta.hidden === null ? !priceChart.data.datasets[index].hidden : null;
+                priceChart.update();
+            }
+        }
+
+        function renderRsiChart(historical) {
+            const ctx = document.getElementById('rsiChart').getContext('2d');
+            const dates = historical.map(h => h.date);
+            const rsi = historical.map(h => h.rsi_14);
+
+            if (rsiChart) rsiChart.destroy();
+
+            rsiChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'RSI (14)',
+                        data: rsi,
+                        borderColor: '#a855f7',
+                        borderWidth: 1.8,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { display: false },
+                        y: {
+                            min: 10,
+                            max: 90,
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8', stepSize: 20 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMacdChart(historical) {
+            const ctx = document.getElementById('macdChart').getContext('2d');
+            const dates = historical.map(h => h.date);
+            const macd = historical.map(h => h.macd);
+            const signal = historical.map(h => h.macd_signal);
+            const hist = historical.map(h => h.macd_hist);
+            const histColors = hist.map(val => val >= 0 ? '#10b981' : '#ef4444');
+
+            if (macdChart) macdChart.destroy();
+
+            macdChart = new Chart(ctx, {
+                data: {
+                    labels: dates,
+                    datasets: [
+                        { type: 'bar', label: 'Hist', data: hist, backgroundColor: histColors, barPercentage: 0.7 },
+                        { type: 'line', label: 'MACD', data: macd, borderColor: '#38bdf8', borderWidth: 1.5, pointRadius: 0 },
+                        { type: 'line', label: 'Signal', data: signal, borderColor: '#f43f5e', borderWidth: 1.5, borderDash: [3, 3], pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+
+        async function runBacktest() {
+            const ticker = document.getElementById('tickerInput').value.trim().toUpperCase() || 'AAPL';
+            const strategy = document.getElementById('stratSelect').value;
+            const fastPeriod = parseInt(document.getElementById('fastPeriodInput').value) || 20;
+            const slowPeriod = parseInt(document.getElementById('slowPeriodInput').value) || 50;
+
+            try {
+                const res = await fetch('/api/v1/backtest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ticker: ticker,
+                        strategy: strategy,
+                        period: currentPeriod,
+                        fast_period: fastPeriod,
+                        slow_period: slowPeriod,
+                        initial_capital: 10000.0
+                    })
+                });
+
+                if (!res.ok) throw new Error("Backtest failed");
+                const data = await res.json();
+                const s = data.summary;
+
+                document.getElementById('btStratReturn').innerText = `${s.strategy_total_return_pct}%`;
+                document.getElementById('btBenchReturn').innerText = `${s.benchmark_total_return_pct}%`;
+                document.getElementById('btAlpha').innerText = `${s.alpha_pct}%`;
+                document.getElementById('btCagr').innerText = `${s.strategy_cagr_pct}%`;
+                document.getElementById('btWinRate').innerText = `${s.win_rate_pct}%`;
+                document.getElementById('btTrades').innerText = s.total_trades;
+                document.getElementById('btMaxDD').innerText = `${s.strategy_max_drawdown_pct}%`;
+
+                // Render Equity Curve
+                renderEquityChart(data.equity_curve);
+            } catch (err) {
+                console.error("Backtest error:", err);
+            }
+        }
+
+        function renderEquityChart(equitySeries) {
+            const ctx = document.getElementById('equityChart').getContext('2d');
+            const dates = equitySeries.map(e => e.date);
+            const strat = equitySeries.map(e => e.strategy);
+            const bench = equitySeries.map(e => e.benchmark);
+
+            if (equityChart) equityChart.destroy();
+
+            equityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        { label: 'Quantitative Strategy ($)', data: strat, borderColor: '#10b981', borderWidth: 2, pointRadius: 0 },
+                        { label: 'Buy & Hold Benchmark ($)', data: bench, borderColor: '#3b82f6', borderWidth: 1.5, borderDash: [4, 4], pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0', boxWidth: 12 } }
+                    },
+                    scales: {
+                        x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', maxTicksLimit: 8 } },
+                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+
+        function downloadCSV() {
+            const ticker = document.getElementById('tickerInput').value.trim().toUpperCase() || 'AAPL';
+            window.location.href = `/api/v1/export/${ticker}?period=${currentPeriod}`;
+        }
+    </script>
+</body>
+</html>

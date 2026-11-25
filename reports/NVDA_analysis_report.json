@@ -1,0 +1,136 @@
+{
+    "metadata": {
+        "ticker": "NVDA",
+        "generated_at": "2026-11-25 18:46:38",
+        "project": "Stock Market Data Analyzer",
+        "analyst_role": "Quantitative & Financial Data Analyst"
+    },
+    "technical_snapshot": {
+        "Adj Close": 155.3800048828125,
+        "Close": 155.3800048828125,
+        "High": 159.9199981689453,
+        "Low": 150.5,
+        "Open": 159.10000610351562,
+        "Volume": 383594200,
+        "Daily_Return": -0.05858829439653457,
+        "Log_Return": -0.06037471584185228,
+        "Cumulative_Return": 0.1423320100150247,
+        "SMA_20": 175.78150177001953,
+        "SMA_50": 204.9464013671875,
+        "SMA_200": 203.0703002166748,
+        "EMA_12": 160.9844501890503,
+        "EMA_26": 178.250200977792,
+        "RSI_14": 39.466230498614046,
+        "MACD": -17.265750788741684,
+        "MACD_Signal": -16.076240397620257,
+        "MACD_Hist": -1.189510391121427,
+        "BB_Middle": 175.78150177001953,
+        "BB_Upper": 225.84460877276746,
+        "BB_Lower": 125.71839476727159,
+        "BB_Bandwidth": 0.5696060904999958,
+        "ATR_14": 16.150712149483816,
+        "Rolling_Vol_20d": 1.377504729720675,
+        "Signal_SMA_Cross": 1,
+        "Signal_RSI": 0,
+        "Signal_MACD": -1,
+        "Consensus_Score": 0,
+        "Overall_Trend": "Neutral"
+    },
+    "risk_and_performance": {
+        "trading_days": 500,
+        "years_analyzed": 1.98,
+        "current_price": 155.38,
+        "highest_price": 239.24,
+        "lowest_price": 94.31,
+        "distance_from_52w_high_pct": -35.05,
+        "distance_from_52w_low_pct": 64.75,
+        "total_return_pct": 14.23,
+        "cagr_pct": 6.94,
+        "annualized_volatility_pct": 50.99,
+        "sharpe_ratio": 0.06,
+        "sortino_ratio": 0.09,
+        "max_drawdown_pct": -47.53,
+        "calmar_ratio": 0.15,
+        "var_95_daily_pct": -4.38,
+        "var_99_daily_pct": -7.81,
+        "cvar_95_daily_pct": -6.72,
+        "win_rate_pct": 51.0,
+        "skewness": 1.671,
+        "kurtosis": 21.827,
+        "risk_rating": "Very High / Speculative"
+    },
+    "quantitative_backtest": {
+        "strategy_name": "MA_Cross_20_50",
+        "initial_capital": 10000.0,
+        "final_strategy_equity": 9659.56,
+        "final_benchmark_equity": 11423.32,
+        "strategy_total_return_pct": -3.4,
+        "benchmark_total_return_pct": 14.23,
+        "strategy_cagr_pct": -1.73,
+        "benchmark_cagr_pct": 6.92,
+        "alpha_pct": -17.64,
+        "strategy_max_drawdown_pct": -21.35,
+        "benchmark_max_drawdown_pct": -47.53,
+        "total_trades": 8,
+        "win_rate_pct": 37.5,
+        "trades": [
+            {
+                "entry_date": "2024-12-26",
+                "exit_date": "2025-01-03",
+                "entry_price": 139.93,
+                "exit_price": 144.47,
+                "return_pct": 3.24
+            },
+            {
+                "entry_date": "2025-01-22",
+                "exit_date": "2025-01-30",
+                "entry_price": 147.07,
+                "exit_price": 124.65,
+                "return_pct": -15.24
+            },
+            {
+                "entry_date": "2025-05-15",
+                "exit_date": "2025-09-18",
+                "entry_price": 134.83,
+                "exit_price": 176.24,
+                "return_pct": 30.71
+            },
+            {
+                "entry_date": "2025-10-06",
+                "exit_date": "2025-12-03",
+                "entry_price": 185.54,
+                "exit_price": 179.59,
+                "return_pct": -3.21
+            },
+            {
+                "entry_date": "2026-01-16",
+                "exit_date": "2026-03-03",
+                "entry_price": 186.23,
+                "exit_price": 180.05,
+                "return_pct": -3.32
+            },
+            {
+                "entry_date": "2026-03-09",
+                "exit_date": "2026-03-11",
+                "entry_price": 182.65,
+                "exit_price": 186.03,
+                "return_pct": 1.85
+            },
+            {
+                "entry_date": "2026-04-23",
+                "exit_date": "2026-06-25",
+                "entry_price": 199.64,
+                "exit_price": 195.74,
+                "return_pct": -1.95
+            },
+            {
+                "entry_date": "2026-08-07",
+                "exit_date": "2026-11-02",
+                "entry_price": 223.96,
+                "exit_price": 202.06,
+                "return_pct": -9.78
+            }
+        ]
+    },
+    "disclaimer": "This report is generated strictly for academic, educational, and research evaluation purposes. It does not constitute financial or investment advice."
+}

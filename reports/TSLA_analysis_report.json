@@ -1,0 +1,115 @@
+{
+    "metadata": {
+        "ticker": "TSLA",
+        "generated_at": "2026-11-25 18:46:49",
+        "project": "Stock Market Data Analyzer",
+        "analyst_role": "Quantitative & Financial Data Analyst"
+    },
+    "technical_snapshot": {
+        "Adj Close": 384.67999267578125,
+        "Close": 384.67999267578125,
+        "High": 390.0899963378906,
+        "Low": 375.5,
+        "Open": 383.7699890136719,
+        "Volume": 28697600,
+        "Daily_Return": -0.0020235531484148472,
+        "Log_Return": -0.0020256032982787714,
+        "Cumulative_Return": 0.1361233256634542,
+        "SMA_20": 383.35149841308595,
+        "SMA_50": 376.7273980712891,
+        "SMA_200": 381.3714489746094,
+        "EMA_12": 378.9347382087001,
+        "EMA_26": 379.2891428163332,
+        "RSI_14": 51.83683605261267,
+        "MACD": -0.3544046076331142,
+        "MACD_Signal": 0.843288131737425,
+        "MACD_Hist": -1.1976927393705392,
+        "BB_Middle": 383.35149841308595,
+        "BB_Upper": 418.36158998761175,
+        "BB_Lower": 348.34140683856015,
+        "BB_Bandwidth": 0.1826526919521313,
+        "ATR_14": 21.477857317243302,
+        "Rolling_Vol_20d": 0.7263959842776749,
+        "Signal_SMA_Cross": -1,
+        "Signal_RSI": 0,
+        "Signal_MACD": -1,
+        "Consensus_Score": -2,
+        "Overall_Trend": "Strongly Bearish"
+    },
+    "risk_and_performance": {
+        "trading_days": 500,
+        "years_analyzed": 1.98,
+        "current_price": 384.68,
+        "highest_price": 489.88,
+        "lowest_price": 221.86,
+        "distance_from_52w_high_pct": -21.47,
+        "distance_from_52w_low_pct": 73.39,
+        "total_return_pct": 13.61,
+        "cagr_pct": 6.64,
+        "annualized_volatility_pct": 57.0,
+        "sharpe_ratio": 0.05,
+        "sortino_ratio": 0.07,
+        "max_drawdown_pct": -53.77,
+        "calmar_ratio": 0.12,
+        "var_95_daily_pct": -5.18,
+        "var_99_daily_pct": -8.41,
+        "cvar_95_daily_pct": -7.81,
+        "win_rate_pct": 50.2,
+        "skewness": 0.196,
+        "kurtosis": 4.417,
+        "risk_rating": "Very High / Speculative"
+    },
+    "quantitative_backtest": {
+        "strategy_name": "MA_Cross_20_50",
+        "initial_capital": 10000.0,
+        "final_strategy_equity": 8929.5,
+        "final_benchmark_equity": 11361.23,
+        "strategy_total_return_pct": -10.71,
+        "benchmark_total_return_pct": 13.61,
+        "strategy_cagr_pct": -5.54,
+        "benchmark_cagr_pct": 6.63,
+        "alpha_pct": -24.32,
+        "strategy_max_drawdown_pct": -36.96,
+        "benchmark_max_drawdown_pct": -53.77,
+        "total_trades": 5,
+        "win_rate_pct": 40.0,
+        "trades": [
+            {
+                "entry_date": "2024-12-26",
+                "exit_date": "2025-02-06",
+                "entry_price": 454.13,
+                "exit_price": 374.32,
+                "return_pct": -17.57
+            },
+            {
+                "entry_date": "2025-05-07",
+                "exit_date": "2025-07-11",
+                "entry_price": 276.22,
+                "exit_price": 313.51,
+                "return_pct": 13.5
+            },
+            {
+                "entry_date": "2025-08-12",
+                "exit_date": "2025-11-24",
+                "entry_price": 340.84,
+                "exit_price": 417.78,
+                "return_pct": 22.57
+            },
+            {
+                "entry_date": "2025-12-18",
+                "exit_date": "2026-01-28",
+                "entry_price": 483.37,
+                "exit_price": 431.46,
+                "return_pct": -10.74
+            },
+            {
+                "entry_date": "2026-05-11",
+                "exit_date": "2026-06-26",
+                "entry_price": 445.0,
+                "exit_price": 379.71,
+                "return_pct": -14.67
+            }
+        ]
+    },
+    "disclaimer": "This report is generated strictly for academic, educational, and research evaluation purposes. It does not constitute financial or investment advice."
+}

@@ -1,0 +1,129 @@
+{
+    "metadata": {
+        "ticker": "AAPL",
+        "generated_at": "2026-11-25 18:46:33",
+        "project": "Stock Market Data Analyzer",
+        "analyst_role": "Quantitative & Financial Data Analyst"
+    },
+    "technical_snapshot": {
+        "Adj Close": 354.07000732421875,
+        "Close": 354.07000732421875,
+        "High": 354.3999938964844,
+        "Low": 345.8800048828125,
+        "Open": 348.05999755859375,
+        "Volume": 41214200,
+        "Daily_Return": 0.014294777540677206,
+        "Log_Return": 0.014193570555518734,
+        "Cumulative_Return": 0.5204621237100115,
+        "SMA_20": 348.084001159668,
+        "SMA_50": 342.5818017578125,
+        "SMA_200": 303.9926501464844,
+        "EMA_12": 349.8060184412034,
+        "EMA_26": 347.1089452933766,
+        "RSI_14": 56.70889408958086,
+        "MACD": 2.6970731478267567,
+        "MACD_Signal": 3.1325567807024526,
+        "MACD_Hist": -0.4354836328756959,
+        "BB_Middle": 348.084001159668,
+        "BB_Upper": 360.56084094751066,
+        "BB_Lower": 335.6071613718253,
+        "BB_Bandwidth": 0.07168867139122483,
+        "ATR_14": 8.149998256138392,
+        "Rolling_Vol_20d": 0.2910477298375132,
+        "Signal_SMA_Cross": 1,
+        "Signal_RSI": 0,
+        "Signal_MACD": -1,
+        "Consensus_Score": 0,
+        "Overall_Trend": "Neutral"
+    },
+    "risk_and_performance": {
+        "trading_days": 500,
+        "years_analyzed": 1.98,
+        "current_price": 354.07,
+        "highest_price": 356.27,
+        "lowest_price": 172.42,
+        "distance_from_52w_high_pct": -0.62,
+        "distance_from_52w_low_pct": 105.35,
+        "total_return_pct": 52.05,
+        "cagr_pct": 23.51,
+        "annualized_volatility_pct": 29.06,
+        "sharpe_ratio": 0.67,
+        "sortino_ratio": 0.92,
+        "max_drawdown_pct": -33.43,
+        "calmar_ratio": 0.7,
+        "var_95_daily_pct": -2.66,
+        "var_99_daily_pct": -4.98,
+        "cvar_95_daily_pct": -4.23,
+        "win_rate_pct": 53.2,
+        "skewness": 0.633,
+        "kurtosis": 11.795,
+        "risk_rating": "Moderate"
+    },
+    "quantitative_backtest": {
+        "strategy_name": "MA_Cross_20_50",
+        "initial_capital": 10000.0,
+        "final_strategy_equity": 10527.28,
+        "final_benchmark_equity": 15204.62,
+        "strategy_total_return_pct": 5.27,
+        "benchmark_total_return_pct": 52.05,
+        "strategy_cagr_pct": 2.62,
+        "benchmark_cagr_pct": 23.46,
+        "alpha_pct": -46.77,
+        "strategy_max_drawdown_pct": -27.16,
+        "benchmark_max_drawdown_pct": -33.43,
+        "total_trades": 7,
+        "win_rate_pct": 28.57,
+        "trades": [
+            {
+                "entry_date": "2024-12-26",
+                "exit_date": "2025-01-23",
+                "entry_price": 259.02,
+                "exit_price": 223.66,
+                "return_pct": -13.65
+            },
+            {
+                "entry_date": "2025-03-07",
+                "exit_date": "2025-03-18",
+                "entry_price": 239.07,
+                "exit_price": 212.69,
+                "return_pct": -11.03
+            },
+            {
+                "entry_date": "2025-06-09",
+                "exit_date": "2025-06-17",
+                "entry_price": 201.45,
+                "exit_price": 195.64,
+                "return_pct": -2.88
+            },
+            {
+                "entry_date": "2025-07-14",
+                "exit_date": "2026-01-08",
+                "entry_price": 208.62,
+                "exit_price": 259.04,
+                "return_pct": 24.17
+            },
+            {
+                "entry_date": "2026-02-24",
+                "exit_date": "2026-03-19",
+                "entry_price": 272.14,
+                "exit_price": 248.96,
+                "return_pct": -8.52
+            },
+            {
+                "entry_date": "2026-04-24",
+                "exit_date": "2026-07-08",
+                "entry_price": 271.06,
+                "exit_price": 313.39,
+                "return_pct": 15.62
+            },
+            {
+                "entry_date": "2026-07-10",
+                "exit_date": "2026-08-27",
+                "entry_price": 315.32,
+                "exit_price": 314.58,
+                "return_pct": -0.23
+            }
+        ]
+    },
+    "disclaimer": "This report is generated strictly for academic, educational, and research evaluation purposes. It does not constitute financial or investment advice."
+}

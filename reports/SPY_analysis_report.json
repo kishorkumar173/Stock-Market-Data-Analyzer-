@@ -1,0 +1,108 @@
+{
+    "metadata": {
+        "ticker": "SPY",
+        "generated_at": "2026-11-25 18:46:55",
+        "project": "Stock Market Data Analyzer",
+        "analyst_role": "Quantitative & Financial Data Analyst"
+    },
+    "technical_snapshot": {
+        "Adj Close": 718.780029296875,
+        "Close": 718.780029296875,
+        "High": 720.9299926757812,
+        "Low": 712.1400146484375,
+        "Open": 715.1500244140625,
+        "Volume": 64228000,
+        "Daily_Return": -0.004859473116399671,
+        "Log_Return": -0.004871318747147825,
+        "Cumulative_Return": 0.20291867195808688,
+        "SMA_20": 743.1094940185546,
+        "SMA_50": 758.6357946777343,
+        "SMA_200": 733.0377993774414,
+        "EMA_12": 730.0805226994247,
+        "EMA_26": 742.9417623467772,
+        "RSI_14": 40.470733135705366,
+        "MACD": -12.861239647352477,
+        "MACD_Signal": -9.331888490809536,
+        "MACD_Hist": -3.5293511565429405,
+        "BB_Middle": 743.1094940185546,
+        "BB_Upper": 784.8401217747859,
+        "BB_Lower": 701.3788662623234,
+        "BB_Bandwidth": 0.11231353681287684,
+        "ATR_14": 17.649283272879465,
+        "Rolling_Vol_20d": 0.31735172399218603,
+        "Signal_SMA_Cross": 1,
+        "Signal_RSI": 0,
+        "Signal_MACD": -1,
+        "Consensus_Score": 0,
+        "Overall_Trend": "Neutral"
+    },
+    "risk_and_performance": {
+        "trading_days": 500,
+        "years_analyzed": 1.98,
+        "current_price": 718.78,
+        "highest_price": 779.09,
+        "lowest_price": 496.48,
+        "distance_from_52w_high_pct": -7.74,
+        "distance_from_52w_low_pct": 44.78,
+        "total_return_pct": 20.29,
+        "cagr_pct": 9.76,
+        "annualized_volatility_pct": 17.5,
+        "sharpe_ratio": 0.33,
+        "sortino_ratio": 0.43,
+        "max_drawdown_pct": -19.0,
+        "calmar_ratio": 0.51,
+        "var_95_daily_pct": -1.6,
+        "var_99_daily_pct": -2.99,
+        "cvar_95_daily_pct": -2.55,
+        "win_rate_pct": 53.2,
+        "skewness": 0.992,
+        "kurtosis": 19.431,
+        "risk_rating": "Low / Conservative"
+    },
+    "quantitative_backtest": {
+        "strategy_name": "MA_Cross_20_50",
+        "initial_capital": 10000.0,
+        "final_strategy_equity": 11196.7,
+        "final_benchmark_equity": 12029.19,
+        "strategy_total_return_pct": 11.97,
+        "benchmark_total_return_pct": 20.29,
+        "strategy_cagr_pct": 5.85,
+        "benchmark_cagr_pct": 9.74,
+        "alpha_pct": -8.32,
+        "strategy_max_drawdown_pct": -8.37,
+        "benchmark_max_drawdown_pct": -19.0,
+        "total_trades": 4,
+        "win_rate_pct": 50.0,
+        "trades": [
+            {
+                "entry_date": "2024-12-26",
+                "exit_date": "2025-01-02",
+                "entry_price": 601.34,
+                "exit_price": 584.64,
+                "return_pct": -2.78
+            },
+            {
+                "entry_date": "2025-02-10",
+                "exit_date": "2025-03-10",
+                "entry_price": 604.85,
+                "exit_price": 560.58,
+                "return_pct": -7.32
+            },
+            {
+                "entry_date": "2025-05-15",
+                "exit_date": "2026-03-02",
+                "entry_price": 590.46,
+                "exit_price": 686.38,
+                "return_pct": 16.24
+            },
+            {
+                "entry_date": "2026-04-24",
+                "exit_date": "2026-11-06",
+                "entry_price": 713.94,
+                "exit_price": 735.29,
+                "return_pct": 2.99
+            }
+        ]
+    },
+    "disclaimer": "This report is generated strictly for academic, educational, and research evaluation purposes. It does not constitute financial or investment advice."
+}
